@@ -1,42 +1,42 @@
-# Fireworks to OpenAI API Proxy
+# Fireworks转 OpenAI API 代理
 
-A proxy service that converts AskCodi API to OpenAI-compatible format, enabling tool calling functionality for CLI tools like OpenCode, Cline, and Roo-Code.
+一个将 Fireworks API 转换为 OpenAI 兼容格式的代理服务，使 CLI 工具（如 OpenCode、Cline 和 Roo-Code）能够调用工具。
 
-## Inspiration
+## 灵感来源
 
-This project draws inspiration from [Chat2API](https://github.com/xiaoY233/Chat2API), which enables tool calling for web-based AI models via prompt engineering. The core idea is to make tool calling work with any model, even those that don't natively support the OpenAI function calling protocol.
+本项目借鉴了 [Chat2API](https://github.com/xiaoY233/Chat2API)，它通过提示词工程让 web 版 AI 模型支持工具调用。核心思想是让工具调用适用于任何模型，即使是那些原生不支持 OpenAI 函数调用协议的模型。
 
-## Implementation Approaches
+## 实现方式
 
-### Approach 1: Native Function Calling (Original)
+### 方式一：原生函数调用（最初版）
 
-Pass the `tools` parameter directly to the upstream API, relying on the model to natively support function calling.
+直接将 `tools` 参数传递给上游 API，依赖模型原生支持函数调用。
 
 ```javascript
-// Forward tools parameter to upstream
+// 透传 tools 参数给上游
 if (tools) {
   askcodiPayload.tools = tools
 }
 ```
 
-**Pros:**
-- Standard protocol, stable and reliable
-- Better structured responses
-- No parsing required
+**优点：**
+- 标准协议，稳定可靠
+- 响应结构更好
+- 无需解析
 
-**Cons:**
-- Requires upstream API to support function calling
-- Doesn't work with most web-based reverse APIs
-- Limited model compatibility
+**缺点：**
+- 需要上游 API 支持函数调用
+- 无法用于大多数网页版逆向 API
+- 模型兼容性有限
 
-### Approach 2: Prompt Engineering (Current)
+### 方式二：提示词工程（当前版本）
 
-Inject tool definitions into the system prompt, guiding the model to return tool calls as JSON text.
+将工具定义注入到 system prompt 中，引导模型以 JSON 文本形式返回工具调用。
 
 ```javascript
-const systemPrompt = `You are an AI programming assistant.
-When users request operations, call tools using:
-{"name": "tool_name", "arguments": {...}}
+const systemPrompt = `你是一个 AI 编程助手。
+当用户请求操作时，请使用以下格式调用工具：
+{"name": "工具名称", "arguments": {...}}
 `;
 
 const toolDescription = buildToolDescription(tools);
@@ -46,64 +46,64 @@ const enhancedMessages = [
 ];
 ```
 
-**Pros:**
-- Works with any model that supports conversation
-- Compatible with web-based reverse APIs
-- Broader model support
-- Works with AskCodi's free models
+**优点：**
+- 适用于任何支持对话的模型
+- 支持网页版逆向 API
+- 兼容性更广
+- 支持 AskCodi 的免费模型
 
-**Cons:**
-- Response parsing required on client side
-- Less structured than native function calling
-- May occasionally misparse regular text as tool calls
+**缺点：**
+- 客户端需要解析响应
+- 不如原生函数调用结构化
+- 偶尔可能将普通文本误解析为工具调用
 
-## Available Tools
+## 可用工具
 
-The proxy includes 24 built-in tools matching OpenCode's toolset:
+代理包含 24 个内置工具，与 OpenCode 工具集匹配：
 
-| Category | Tools |
-|----------|-------|
-| File Operations | read, write, edit, glob, grep, list, patch |
-| Command Execution | bash |
-| LSP Features | lsp_goto_definition, lsp_find_references, lsp_symbols, lsp_diagnostics, lsp_rename |
-| Web Search | websearch, webfetch, codesearch |
+| 类别 | 工具 |
+|------|------|
+| 文件操作 | read, write, edit, glob, grep, list, patch |
+| 命令执行 | bash |
+| LSP 功能 | lsp_goto_definition, lsp_find_references, lsp_symbols, lsp_diagnostics, lsp_rename |
+| 网络搜索 | websearch, webfetch, codesearch |
 | GitHub | github_search_code, github_search_repositories, github_search_users, github_list_issues |
-| Task Management | todowrite, todoread, skill |
-| User Interaction | question |
+| 任务管理 | todowrite, todoread, skill |
+| 用户交互 | question |
 
-## Usage
+## 使用方法
 
 ```bash
-# Install dependencies
+# 安装依赖
 npm install
 
-# Configure environment
-# Edit .env with your ASKCODI_TOKEN and ASKCODI_API_KEY
+# 配置环境
+# 编辑 .env 文件，填入 ASKCODI_TOKEN 和 ASKCODI_API_KEY
 
-# Start the server
+# 启动服务
 node server.js
 ```
 
-Then configure your CLI tool to use:
+然后配置你的 CLI 工具使用：
 - URL: `http://localhost:3002/v1`
-- Model: `google/gemini-3-flash:free` (or your configured model)
+- 模型: `google/gemini-3-flash:free`（或你配置的模型）
 
-## Comparison with Chat2API
+## 与 Chat2API 的对比
 
-| Feature | Chat2API | This Project |
-|---------|----------|---------------|
-| Target | Web UI (DeepSeek, GLM, Kimi, etc.) | AskCodi API |
-| Implementation | Desktop app with Electron | Simple Node.js proxy |
-| Tool Integration | Via MCP servers | Via prompt engineering |
-| Model Support | Multi-provider | AskCodi supported models |
+| 特性 | Chat2API | 本项目 |
+|------|----------|--------|
+| 目标 | 网页版（DeepSeek、GLM、Kimi 等） | AskCodi API |
+| 实现方式 | Electron 桌面应用 | 简单的 Node.js 代理 |
+| 工具集成 | 通过 MCP 服务器 | 通过提示词工程 |
+| 模型支持 | 多提供商 | AskCodi 支持的模型 |
 
-## Architecture
+## 架构
 
 ```
-User (OpenCode/Cline) --> This Proxy --> AskCodi API --> Model
-                                    |
-                              Inject tool descriptions
-                              into system prompt
+用户 (OpenCode/Cline) --> 本代理 --> AskCodi API --> 模型
+                              |
+                        注入工具描述
+                        到 system prompt
 ```
 
 ## License
