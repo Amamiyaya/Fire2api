@@ -1,4 +1,4 @@
-# AskCodi to OpenAI API Proxy
+# Fireworks to OpenAI API Proxy
 
 A proxy service that converts AskCodi API to OpenAI-compatible format, enabling tool calling functionality for CLI tools like OpenCode, Cline, and Roo-Code.
 
