@@ -9,7 +9,7 @@ import requests
 headers = {
     'accept': 'text/event-stream',
     'accept-language': 'zh-CN,zh;q=0.9',
-    'authorization': 'Bearer internal_KZkurTUv4ycYBpcfLMhhLy',
+    'authorization': 'Bearer your_api_key',
     'cache-control': 'no-cache',
     'content-type': 'application/json',
     'fireworks-playground': 'true',
