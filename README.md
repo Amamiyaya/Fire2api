@@ -86,13 +86,13 @@ node server.js
 
 然后配置你的 CLI 工具使用：
 - URL: `http://localhost:3002/v1`
-- 模型: `google/gemini-3-flash:free`（或你配置的模型）
+- 模型: `glm-5`（或你配置的模型）
 
 ## 与 Chat2API 的对比
 
 | 特性 | Chat2API | 本项目 |
 |------|----------|--------|
-| 目标 | 网页版（DeepSeek、GLM、Kimi 等） | AskCodi API |
+| 目标 | 网页版（DeepSeek、GLM、Kimi 等） | Firework API |
 | 实现方式 | Electron 桌面应用 | 简单的 Node.js 代理 |
 | 工具集成 | 通过 MCP 服务器 | 通过提示词工程 |
 | 模型支持 | 多提供商 | AskCodi 支持的模型 |
@@ -100,7 +100,7 @@ node server.js
 ## 架构
 
 ```
-用户 (OpenCode/Cline) --> 本代理 --> AskCodi API --> 模型
+用户 (OpenCode/Cline) --> 本代理 --> Firework API --> 模型
                               |
                         注入工具描述
                         到 system prompt
