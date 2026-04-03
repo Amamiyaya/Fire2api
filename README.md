@@ -77,7 +77,7 @@ const enhancedMessages = [
 npm install
 
 # 配置环境
-# 编辑 .env 文件，填入 ASKCODI_TOKEN 和 ASKCODI_API_KEY
+# 编辑 .env 文件，填入 FIREWORKS_API_KEY
 
 # 启动服务
 node server.js
@@ -94,7 +94,7 @@ node server.js
 | 目标 | 网页版（DeepSeek、GLM、Kimi 等） | Firework API |
 | 实现方式 | Electron 桌面应用 | 简单的 Node.js 代理 |
 | 工具集成 | 通过 MCP 服务器 | 通过提示词工程 |
-| 模型支持 | 多提供商 | AskCodi 支持的模型 |
+| 模型支持 | 多提供商 | Fireworks 支持的模型 |
 
 ## 架构
 
