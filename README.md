@@ -50,7 +50,6 @@ const enhancedMessages = [
 - 适用于任何支持对话的模型
 - 支持网页版逆向 API
 - 兼容性更广
-- 支持 AskCodi 的免费模型
 
 **缺点：**
 - 客户端需要解析响应
